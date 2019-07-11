@@ -215,7 +215,7 @@ function _typeof(obj) {
 					key: 'setBackground',
 					value: function setBackground(target) {
 						var image = this.createImage(target);
-						var src = target.dataset.background || '';
+						var src = target.dataset.backgroundImage || '';
 						image.setAttribute('src', src); // eslint-disable-next-line no-param-reassign
 
 						target.style.backgroundImage = 'url('.concat(src, ')');
