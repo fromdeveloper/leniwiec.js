@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>leniwiec.js - library for lazy loading of images</title>
+		<meta
+			name="description"
+			content="A lightweight library for lazy loading of images based on the IntersectionObserver API."
+		/>
+		<link rel="stylesheet" href="./css/styles.min.css" />
+	</head>
+	<body>
+		<div class="text-center">
+			<h1>leniwiec.js example</h1>
+
+			<h2>Images List (div)</h2>
+		</div>
+		<div class="images-list js-images-list">
+			<div class="leniwiec" data-background="./images/1.jpg"></div>
+			<div class="leniwiec" data-background="./images/2.jpg"></div>
+			<div class="leniwiec" data-background="./images/3.jpg"></div>
+			<div class="leniwiec" data-background="./images/error.jpg"></div>
+			<div class="leniwiec" data-background="./images/4.jpg"></div>
+			<div class="leniwiec" data-background="./images/5.jpg"></div>
+			<div class="leniwiec" data-background="./images/6.jpg"></div>
+			<div class="leniwiec" data-background="./images/error.jpg"></div>
+			<div class="leniwiec" data-background="./images/7.jpg"></div>
+			<div class="leniwiec" data-background="./images/8.jpg"></div>
+			<div class="leniwiec" data-background="./images/9.jpg"></div>
+			<div class="leniwiec" data-background="./images/10.jpg"></div>
+			<div class="leniwiec" data-background="./images/11.jpg"></div>
+			<div class="leniwiec" data-background="./images/error.jpg"></div>
+			<div class="leniwiec" data-background="./images/12.jpg"></div>
+		</div>
+
+		<div class="text-center">
+			<button class="js-load-more load-more">load more images</button>
+		</div>
+
+		<div class="text-center">
+			<h2>Images List (img)</h2>
+		</div>
+
+		<div class="img-items">
+			<img data-src="//via.placeholder.com/1000x500" height="500px" class="leniwiec" />
+			<img data-src="//via.placeholder.com/1000x600" height="600px" class="leniwiec" />
+			<img data-src="//via.placeholder.com/1000x700" height="700px" class="leniwiec" />
+		</div>
+
+		<div class="text-center">
+			<h2>Images List (picture)</h2>
+		</div>
+
+		<div class="img-items">
+			<picture class="leniwiec" data-src="//via.placeholder.com/1000x320">
+				<source media="(min-width: 1000px)" srcset="//via.placeholder.com/1000x1000" />
+			</picture>
+		</div>
+
+		<div class="text-center bottom">
+			<footer>
+				<p>Images from unsplash.com</p>
+			</footer>
+		</div>
+		<script src="./js/leniwiec.min.js"></script>
+		<script>
+			const leniwiec = new Leniwiec('.leniwiec', {
+				threshold: 0.5,
+			});
+			leniwiec.mount();
+
+			const imagesList = document.querySelector('.js-images-list');
+			const button = document.querySelector('.js-load-more');
+
+			button.addEventListener('click', () => {
+				for (let i = 13; i <= 21; i++) {
+					const div = document.createElement('div');
+					div.setAttribute('data-background', `./images/${i}.jpg`);
+
+					imagesList.appendChild(div);
+					leniwiec.observe(div);
+					button.remove();
+				}
+			});
+		</script>
+	</body>
+</html>
