@@ -13,7 +13,8 @@
 		"performance",
 		"vanilla-javascript",
 		"vanilla-js",
-		"vanillajs"
+		"vanillajs",
+		"seo-friendly"
 	],
 	"main": "dist/leniwiec.js",
 	"browser": "dist/leniwiec.js",
