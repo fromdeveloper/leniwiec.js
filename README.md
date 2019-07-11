@@ -38,10 +38,10 @@ leniwiec.mount();
 	loadedClassName: 'is-loaded',
 
   // Callback fired after loading the image
-	onLoad: element => { console.log(element) }, // loaded image
+	onLoad: element => { console.log(element) }, // loaded element
 
   // Callback fired on error when loading the image
-	onError: element => { console.log(element) }, // noloaded image
+	onError: element => { console.log(element) }, // unloaded element
 }
 ```
 
