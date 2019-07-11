@@ -1,10 +1,10 @@
 /**
- * License: MIT
- * Generated on 2019/07/11 07:11
- * Author: Przemysław Tyczyński | https://tyczynski.pl
- * Copyright (c) 2019 Przemysław Tyczyński
+ * @package leniwiec - A lightweight library for lazy loading of images based on the IntersectionObserver API.
+ * @version v1.0.1
+ * @link https://github.com/tyczynski/leniwiec.js
+ * @author Przemysław Tyczyński | https://tyczynski.pl
+ * @license MIT
  */
-
 function _extends() {
 	_extends =
 		Object.assign ||
@@ -83,7 +83,7 @@ function _typeof(obj) {
 		onError: function onError() {},
 	};
 	/**
-	 * Check if the client is a robot
+	 * Check if the user is a robot
 	 *
 	 * @return {bool}
 	 */
@@ -97,6 +97,16 @@ function _typeof(obj) {
 		);
 	}
 	/**
+	 * Checks whether the passed parameter is an Element or HTMLElement
+	 *
+	 * @param {*} param
+	 * @return {bool}
+	 */
+
+	function isElement(param) {
+		return param instanceof Element || param instanceof HTMLDocument;
+	}
+	/**
 	 * Leniwiec class
 	 *
 	 * @class
@@ -108,8 +118,8 @@ function _typeof(obj) {
 			/**
 			 * Class for lazy loading of images based on the IntersectionObserver API.
 			 *
-			 * @param {string} selector
-			 * @param {object} config
+			 * @param {String} selector
+			 * @param {Object} config
 			 */
 			function Leniwiec() {
 				var selector =
@@ -135,7 +145,7 @@ function _typeof(obj) {
 
 						for (var i = 0; i < this.elements.length; i += 1) {
 							this.observer.observe(this.elements[i]);
-						}
+						} // Improving SEO - Load all images if the user is a robot
 
 						if (isRobot()) {
 							this.loadAll();
@@ -183,7 +193,7 @@ function _typeof(obj) {
 						}
 					},
 					/**
-					 * The method that adds a image for the <img> or <iframe> tag
+					 * The method that adds a image for the <img> tag
 					 *
 					 * @param {Element} target
 					 */
@@ -196,7 +206,7 @@ function _typeof(obj) {
 						target.setAttribute('src', src);
 					},
 					/**
-					 * The method that adds a background-image to any tag except the <img>, <picture> and <iframe> tags
+					 * The method that adds a background-image to any tag except the <img> and <picture> tags
 					 *
 					 * @param {Element} target
 					 */
@@ -204,17 +214,7 @@ function _typeof(obj) {
 				{
 					key: 'setBackground',
 					value: function setBackground(target) {
-						var _this$config = this.config,
-							loadedClassName = _this$config.loadedClassName,
-							errorClassName = _this$config.errorClassName;
-						var image = this.createImage({
-							onLoad: function onLoad() {
-								target.classList.add(loadedClassName);
-							},
-							onError: function onError() {
-								target.classList.add(errorClassName);
-							},
-						});
+						var image = this.createImage(target);
 						var src = target.dataset.background || '';
 						image.setAttribute('src', src); // eslint-disable-next-line no-param-reassign
 
@@ -231,63 +231,64 @@ function _typeof(obj) {
 					value: function setPicture(target) {
 						var src = target.dataset.src || '';
 						var alt = target.dataset.alt || '';
-						var image = this.createImage();
+						var image = this.createImage(target);
 						image.setAttribute('src', src);
 						image.setAttribute('alt', alt);
 						target.appendChild(image);
 					},
 					/**
-					 * @param {object} callbacks
+					 * Creates Image object and bind events for it
+					 *
+					 * @param {Element} target
 					 * @return {Image}
 					 */
 				},
 				{
 					key: 'createImage',
-					value: function createImage() {
-						var callbacks = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+					value: function createImage(target) {
 						var image = new Image();
-						this.bindImageEvents(image, callbacks);
+						this.bindImageEvents(image, target);
 						return image;
 					},
 					/**
-					 * Method that binds the "loading" and "error" events to the image being loaded
+					 * Method that binds the "loading" and "error" events to the images
 					 *
-					 * @param {object} callbacks
-					 * @param {Element} target
+					 * @param {Image|Element} image - instance of Image or image element
+					 * @param {Element|undefined} target - <picture> or any element with "background-image" uses image param only for events callbacks
 					 */
 				},
 				{
 					key: 'bindImageEvents',
-					value: function bindImageEvents(target) {
+					value: function bindImageEvents(image, target) {
 						var _this2 = this;
 
-						var callbacks = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-						var _this$config2 = this.config,
-							loadedClassName = _this$config2.loadedClassName,
-							errorClassName = _this$config2.errorClassName;
+						var _this$config = this.config,
+							loadedClassName = _this$config.loadedClassName,
+							errorClassName = _this$config.errorClassName;
+						var isTargetElement = isElement(target);
 
 						var load = function load() {
-							target.classList.add(loadedClassName);
+							image.classList.add(loadedClassName);
 
-							_this2.config.onLoad(target);
+							_this2.config.onLoad(image);
 
-							if (typeof callbacks.onLoad === 'function') {
-								callbacks.onLoad();
+							if (isTargetElement) {
+								target.classList.add(loadedClassName);
 							}
 						};
 
 						var error = function error() {
-							target.classList.add(errorClassName);
+							image.classList.add(errorClassName);
 
-							_this2.config.onError(target);
+							_this2.config.onError(image);
 
-							if (typeof callbacks.onError === 'function') {
-								callbacks.onError();
+							if (isTargetElement) {
+								target.classList.add(errorClassName);
 							}
 						};
 
-						target.addEventListener('load', load);
-						target.addEventListener('error', error);
+						image.addEventListener('load', load);
+						image.addEventListener('error', error);
 					},
 					/**
 					 * Load all elements immediately
