@@ -1,4 +1,4 @@
-# leniwiec.js
+# leniwiec.js [![npm version](https://badge.fury.io/js/leniwiec.svg)](https://badge.fury.io/js/leniwiec) [![jsDelivr hits](https://badgen.net/jsdelivr/hits/npm/leniwiec)](https://www.jsdelivr.com/package/npm/leniwiec)
 
 A lightweight library for lazy loading of images based on the IntersectionObserver API.
 
@@ -13,10 +13,12 @@ $ yarn add leniwiec
 ```
 
 ## Usage
-
 ```javascript
-// Create instance...
-const leniwiec = new Leniwiec('.leniwiec', customConfig);
+// Import package...
+import Leniwiec from 'leniwiec';
+
+// ...create instance...
+const leniwiec = new Leniwiec();
 
 // ...and mount it
 leniwiec.mount();
@@ -47,13 +49,26 @@ leniwiec.mount();
 
 ## Methods
 
-```
-// Class instance
-const leniwiec = new Leniwiec();
-
+```javascript
 // Activation of the class
 leniwiec.mount();
 
 // Addition of a new element for observation by the class
 leniwiec.observe(element);
 ```
+
+## Examples
+
+```html
+<div class="leniwiec" data-background-image="//via.placeholder.com/300x150"></div>
+
+<img class="leniwiec" data-src="//via.placeholder.com/300x150"></div>
+
+<picture class="leniwiec" data-src="//via.placeholder.com/1000x320">
+	<source media="(min-width: 1000px)" srcset="//via.placeholder.com/1000x1000" />
+</picture>
+```
+
+## License
+
+[MIT](LICENSE) © [Przemysław Tyczyński](https://tyczynski.pl)
