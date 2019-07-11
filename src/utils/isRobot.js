@@ -1,5 +1,5 @@
 /**
- * Check if the client is a robot
+ * Check if the user is a robot
  *
  * @return {bool}
  */

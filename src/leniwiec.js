@@ -1,5 +1,7 @@
 import defaultConfig from './defaultConfig';
+
 import isRobot from './utils/isRobot';
+import isElement from './utils/isElement';
 
 /**
  * Leniwiec class
@@ -10,8 +12,8 @@ export default class Leniwiec {
 	/**
 	 * Class for lazy loading of images based on the IntersectionObserver API.
 	 *
-	 * @param {string} selector
-	 * @param {object} config
+	 * @param {String} selector
+	 * @param {Object} config
 	 */
 	constructor(selector = '.leniwiec', config = {}) {
 		this.elements = document.querySelectorAll(selector);
@@ -31,6 +33,7 @@ export default class Leniwiec {
 			this.observer.observe(this.elements[i]);
 		}
 
+		// Improving SEO - Load all images if the user is a robot
 		if (isRobot()) {
 			this.loadAll();
 		}
@@ -70,7 +73,7 @@ export default class Leniwiec {
 	}
 
 	/**
-	 * The method that adds a image for the <img> or <iframe> tag
+	 * The method that adds a image for the <img> tag
 	 *
 	 * @param {Element} target
 	 */
@@ -82,21 +85,12 @@ export default class Leniwiec {
 	}
 
 	/**
-	 * The method that adds a background-image to any tag except the <img>, <picture> and <iframe> tags
+	 * The method that adds a background-image to any tag except the <img> and <picture> tags
 	 *
 	 * @param {Element} target
 	 */
 	setBackground(target) {
-		const { loadedClassName, errorClassName } = this.config;
-
-		const image = this.createImage({
-			onLoad() {
-				target.classList.add(loadedClassName);
-			},
-			onError() {
-				target.classList.add(errorClassName);
-			},
-		});
+		const image = this.createImage(target);
 
 		const src = target.dataset.background || '';
 		image.setAttribute('src', src);
@@ -114,7 +108,7 @@ export default class Leniwiec {
 		const src = target.dataset.src || '';
 		const alt = target.dataset.alt || '';
 
-		const image = this.createImage();
+		const image = this.createImage(target);
 		image.setAttribute('src', src);
 		image.setAttribute('alt', alt);
 
@@ -122,45 +116,48 @@ export default class Leniwiec {
 	}
 
 	/**
-	 * @param {object} callbacks
+	 * Creates Image object and bind events for it
+	 *
+	 * @param {Element} target
 	 * @return {Image}
 	 */
-	createImage(callbacks = {}) {
+	createImage(target) {
 		const image = new Image();
-		this.bindImageEvents(image, callbacks);
+		this.bindImageEvents(image, target);
 
 		return image;
 	}
 
 	/**
-	 * Method that binds the "loading" and "error" events to the image being loaded
+	 * Method that binds the "loading" and "error" events to the images
 	 *
-	 * @param {object} callbacks
-	 * @param {Element} target
+	 * @param {Image|Element} image - instance of Image or image element
+	 * @param {Element|undefined} target - <picture> or any element with "background-image" uses image param only for events callbacks
 	 */
-	bindImageEvents(target, callbacks = {}) {
+	bindImageEvents(image, target) {
 		const { loadedClassName, errorClassName } = this.config;
+		const isTargetElement = isElement(target);
 
 		const load = () => {
-			target.classList.add(loadedClassName);
-			this.config.onLoad(target);
+			image.classList.add(loadedClassName);
+			this.config.onLoad(image);
 
-			if (typeof callbacks.onLoad === 'function') {
-				callbacks.onLoad();
+			if (isTargetElement) {
+				target.classList.add(loadedClassName);
 			}
 		};
 
 		const error = () => {
-			target.classList.add(errorClassName);
-			this.config.onError(target);
+			image.classList.add(errorClassName);
+			this.config.onError(image);
 
-			if (typeof callbacks.onError === 'function') {
-				callbacks.onError();
+			if (isTargetElement) {
+				target.classList.add(errorClassName);
 			}
 		};
 
-		target.addEventListener('load', load);
-		target.addEventListener('error', error);
+		image.addEventListener('load', load);
+		image.addEventListener('error', error);
 	}
 
 	/**
