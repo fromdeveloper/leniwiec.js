@@ -1,4 +1,4 @@
-# leniwiec.js [![npm version](https://badge.fury.io/js/leniwiec.svg)](https://badge.fury.io/js/leniwiec) [![](https://data.jsdelivr.com/v1/package/npm/leniwiec/badge?style=rounded)](https://www.jsdelivr.com/package/npm/leniwiec)
+# leniwiec.js [![npm version](https://badge.fury.io/js/leniwiec.svg)](https://badge.fury.io/js/leniwiec) [![](https://data.jsdelivr.com/v1/package/npm/leniwiec/badge?style=rounded)](https://www.jsdelivr.com/package/npm/leniwiec) [![](https://img.shields.io/npm/l/leniwiec.svg)](https://github.com/tyczynski/leniwiec.js/blob/master/LICENSE)
 
 A lightweight library for lazy loading of images based on the IntersectionObserver API.
 
