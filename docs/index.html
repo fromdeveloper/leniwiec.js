@@ -18,21 +18,21 @@
 			<h2>Images List (div)</h2>
 		</div>
 		<div class="images-list js-images-list">
-			<div class="leniwiec" data-background="./images/1.jpg"></div>
-			<div class="leniwiec" data-background="./images/2.jpg"></div>
-			<div class="leniwiec" data-background="./images/3.jpg"></div>
-			<div class="leniwiec" data-background="./images/error.jpg"></div>
-			<div class="leniwiec" data-background="./images/4.jpg"></div>
-			<div class="leniwiec" data-background="./images/5.jpg"></div>
-			<div class="leniwiec" data-background="./images/6.jpg"></div>
-			<div class="leniwiec" data-background="./images/error.jpg"></div>
-			<div class="leniwiec" data-background="./images/7.jpg"></div>
-			<div class="leniwiec" data-background="./images/8.jpg"></div>
-			<div class="leniwiec" data-background="./images/9.jpg"></div>
-			<div class="leniwiec" data-background="./images/10.jpg"></div>
-			<div class="leniwiec" data-background="./images/11.jpg"></div>
-			<div class="leniwiec" data-background="./images/error.jpg"></div>
-			<div class="leniwiec" data-background="./images/12.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/1.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/2.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/3.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/error.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/4.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/5.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/6.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/error.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/7.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/8.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/9.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/10.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/11.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/error.jpg"></div>
+			<div class="leniwiec" data-background-image="./images/12.jpg"></div>
 		</div>
 
 		<div class="text-center">
@@ -77,7 +77,7 @@
 			button.addEventListener('click', () => {
 				for (let i = 13; i <= 21; i++) {
 					const div = document.createElement('div');
-					div.setAttribute('data-background', `./images/${i}.jpg`);
+					div.setAttribute('data-background-image', `./images/${i}.jpg`);
 
 					imagesList.appendChild(div);
 					leniwiec.observe(div);
