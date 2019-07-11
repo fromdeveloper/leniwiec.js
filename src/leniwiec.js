@@ -92,7 +92,7 @@ export default class Leniwiec {
 	setBackground(target) {
 		const image = this.createImage(target);
 
-		const src = target.dataset.background || '';
+		const src = target.dataset.backgroundImage || '';
 		image.setAttribute('src', src);
 
 		// eslint-disable-next-line no-param-reassign
