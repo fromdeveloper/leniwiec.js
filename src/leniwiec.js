@@ -39,6 +39,15 @@ export default class Leniwiec {
 	}
 
 	/**
+	 * Immediately unobserve all elements
+	 */
+	unmount() {
+		for (let i = 0; i < this.elements.length; i += 1) {
+			this.observer.unobserve(this.elements[i]);
+		}
+	}
+
+	/**
 	 * Callback for the IntersectionObserver instance
 	 *
 	 * @param {Array} entries
