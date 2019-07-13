@@ -1,7 +1,6 @@
 import defaultConfig from './defaultConfig';
 
 import isRobot from './utils/isRobot';
-import isElement from './utils/isElement';
 
 /**
  * Leniwiec class
@@ -78,9 +77,10 @@ export default class Leniwiec {
 	 * @param {Element} target
 	 */
 	setSrc(target) {
-		this.bindImageEvents(target);
+		const { src } = Leniwiec.getTargetAttributes(target);
 
-		const src = target.dataset.src || '';
+		this.bindImageEvents(target, target);
+
 		target.setAttribute('src', src);
 	}
 
@@ -90,9 +90,10 @@ export default class Leniwiec {
 	 * @param {Element} target
 	 */
 	setBackground(target) {
-		const image = this.createImage(target);
+		const { src } = Leniwiec.getTargetAttributes(target);
 
-		const src = target.dataset.backgroundImage || '';
+		const image = new Image();
+		this.bindImageEvents(image, target);
 		image.setAttribute('src', src);
 
 		// eslint-disable-next-line no-param-reassign
@@ -105,10 +106,11 @@ export default class Leniwiec {
 	 * @param {Element} target
 	 */
 	setPicture(target) {
-		const src = target.dataset.src || '';
-		const alt = target.dataset.alt || '';
+		const { src, alt } = Leniwiec.getTargetAttributes(target);
 
-		const image = this.createImage(target);
+		const image = new Image();
+		this.bindImageEvents(image, target);
+
 		image.setAttribute('src', src);
 		image.setAttribute('alt', alt);
 
@@ -116,48 +118,26 @@ export default class Leniwiec {
 	}
 
 	/**
-	 * Creates Image object and bind events for it
-	 *
-	 * @param {Element} target
-	 * @return {Image}
-	 */
-	createImage(target) {
-		const image = new Image();
-		this.bindImageEvents(image, target);
-
-		return image;
-	}
-
-	/**
 	 * Method that binds the "loading" and "error" events to the images
 	 *
-	 * @param {Image|Element} image - instance of Image or image element
-	 * @param {Element|undefined} target - <picture> or any element with "background-image" uses image param only for events callbacks
+	 * @param {Image|Element} eventElement
+	 * @param {Element} target
 	 */
-	bindImageEvents(image, target) {
+	bindImageEvents(eventElement, target) {
 		const { loadedClassName, errorClassName } = this.config;
-		const isTargetElement = isElement(target);
 
 		const load = () => {
-			image.classList.add(loadedClassName);
-			this.config.onLoad(image);
-
-			if (isTargetElement) {
-				target.classList.add(loadedClassName);
-			}
+			target.classList.add(loadedClassName);
+			this.config.onLoad(target);
 		};
 
 		const error = () => {
-			image.classList.add(errorClassName);
-			this.config.onError(image);
-
-			if (isTargetElement) {
-				target.classList.add(errorClassName);
-			}
+			target.classList.add(errorClassName);
+			this.config.onError(target);
 		};
 
-		image.addEventListener('load', load);
-		image.addEventListener('error', error);
+		eventElement.addEventListener('load', load);
+		eventElement.addEventListener('error', error);
 	}
 
 	/**
@@ -186,5 +166,18 @@ export default class Leniwiec {
 	 */
 	observe(element) {
 		this.observer.observe(element);
+	}
+
+	/**
+	 * Gets and returns the "alt" and "src" of the target element
+	 *
+	 * @param {Element} target
+	 * @return {Object}
+	 */
+	static getTargetAttributes(target) {
+		const src = target.dataset.src || target.dataset.backgroundImage || '';
+		const alt = target.dataset.alt || '';
+
+		return { src, alt };
 	}
 }
