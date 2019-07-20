@@ -1,10 +1,18 @@
 /**
  * @package leniwiec - A lightweight library for lazy loading of images based on the IntersectionObserver API.
- * @version v1.0.1
+ * @version v1.1.0
  * @link https://github.com/tyczynski/leniwiec.js
  * @author Przemysław Tyczyński | https://tyczynski.pl
  * @license MIT
  */
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -39,17 +47,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
   function isRobot() {
     var isBrowser = typeof window !== 'undefined';
     return isBrowser && !('onscroll' in window) || typeof navigator !== 'undefined' && /(gle|ing|ro)bot|crawl|spider/i.test(navigator.userAgent);
-  }
-  /**
-   * Checks whether the passed parameter is an Element or HTMLElement
-   *
-   * @param {*} param
-   * @return {bool}
-   */
-
-
-  function isElement(param) {
-    return param instanceof Element || param instanceof HTMLDocument;
   }
   /**
    * Leniwiec class
@@ -97,6 +94,17 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         }
       }
       /**
+       * Immediately unobserve all elements
+       */
+
+    }, {
+      key: "unmount",
+      value: function unmount() {
+        for (var i = 0; i < this.elements.length; i += 1) {
+          this.observer.unobserve(this.elements[i]);
+        }
+      }
+      /**
        * Callback for the IntersectionObserver instance
        *
        * @param {Array} entries
@@ -124,18 +132,32 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     }, {
       key: "load",
       value: function load(target) {
-        switch (target.tagName) {
-          case 'IMG':
-            this.setSrc(target);
-            break;
+        if (target.dataset.loadImage) {
+          this.onlyLoad(target);
+        } else {
+          switch (target.tagName) {
+            case 'IMG':
+              this.setSrc(target);
+              break;
 
-          case 'PICTURE':
-            this.setPicture(target);
-            break;
+            case 'PICTURE':
+              this.setPicture(target);
+              break;
 
-          default:
-            this.setBackground(target);
+            default:
+              this.setBackground(target);
+          }
         }
+      }
+    }, {
+      key: "onlyLoad",
+      value: function onlyLoad(target) {
+        var _Leniwiec$getTargetAt = Leniwiec.getTargetAttributes(target),
+            src = _Leniwiec$getTargetAt.src;
+
+        var image = new Image();
+        this.bindImageEvents(image, target, [src]);
+        image.setAttribute('src', src);
       }
       /**
        * The method that adds a image for the <img> tag
@@ -146,8 +168,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     }, {
       key: "setSrc",
       value: function setSrc(target) {
-        this.bindImageEvents(target);
-        var src = target.dataset.src || '';
+        var _Leniwiec$getTargetAt2 = Leniwiec.getTargetAttributes(target),
+            src = _Leniwiec$getTargetAt2.src;
+
+        this.bindImageEvents(target, target);
         target.setAttribute('src', src);
       }
       /**
@@ -159,8 +183,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     }, {
       key: "setBackground",
       value: function setBackground(target) {
-        var image = this.createImage(target);
-        var src = target.dataset.backgroundImage || '';
+        var _Leniwiec$getTargetAt3 = Leniwiec.getTargetAttributes(target),
+            src = _Leniwiec$getTargetAt3.src;
+
+        var image = new Image();
+        this.bindImageEvents(image, target);
         image.setAttribute('src', src); // eslint-disable-next-line no-param-reassign
 
         target.style.backgroundImage = "url(".concat(src, ")");
@@ -174,66 +201,51 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     }, {
       key: "setPicture",
       value: function setPicture(target) {
-        var src = target.dataset.src || '';
-        var alt = target.dataset.alt || '';
-        var image = this.createImage(target);
+        var _Leniwiec$getTargetAt4 = Leniwiec.getTargetAttributes(target),
+            src = _Leniwiec$getTargetAt4.src,
+            alt = _Leniwiec$getTargetAt4.alt;
+
+        var image = new Image();
+        this.bindImageEvents(image, target);
         image.setAttribute('src', src);
         image.setAttribute('alt', alt);
         target.appendChild(image);
       }
       /**
-       * Creates Image object and bind events for it
-       *
-       * @param {Element} target
-       * @return {Image}
-       */
-
-    }, {
-      key: "createImage",
-      value: function createImage(target) {
-        var image = new Image();
-        this.bindImageEvents(image, target);
-        return image;
-      }
-      /**
        * Method that binds the "loading" and "error" events to the images
        *
-       * @param {Image|Element} image - instance of Image or image element
-       * @param {Element|undefined} target - <picture> or any element with "background-image" uses image param only for events callbacks
+       * @param {Image|Element} eventElement
+       * @param {Element} target
        */
 
     }, {
       key: "bindImageEvents",
-      value: function bindImageEvents(image, target) {
+      value: function bindImageEvents(eventElement, target) {
         var _this2 = this;
 
+        var payload = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
         var _this$config = this.config,
             loadedClassName = _this$config.loadedClassName,
             errorClassName = _this$config.errorClassName;
-        var isTargetElement = isElement(target);
 
         var load = function load() {
-          image.classList.add(loadedClassName);
+          var _this2$config;
 
-          _this2.config.onLoad(image);
+          target.classList.add(loadedClassName);
 
-          if (isTargetElement) {
-            target.classList.add(loadedClassName);
-          }
+          (_this2$config = _this2.config).onLoad.apply(_this2$config, [target].concat(_toConsumableArray(payload)));
         };
 
         var error = function error() {
-          image.classList.add(errorClassName);
+          var _this2$config2;
 
-          _this2.config.onError(image);
+          target.classList.add(errorClassName);
 
-          if (isTargetElement) {
-            target.classList.add(errorClassName);
-          }
+          (_this2$config2 = _this2.config).onError.apply(_this2$config2, [target].concat(_toConsumableArray(payload)));
         };
 
-        image.addEventListener('load', load);
-        image.addEventListener('error', error);
+        eventElement.addEventListener('load', load);
+        eventElement.addEventListener('error', error);
       }
       /**
        * Load all elements immediately
@@ -268,6 +280,23 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       key: "observe",
       value: function observe(element) {
         this.observer.observe(element);
+      }
+      /**
+       * Gets and returns the "alt" and "src" of the target element
+       *
+       * @param {Element} target
+       * @return {Object}
+       */
+
+    }], [{
+      key: "getTargetAttributes",
+      value: function getTargetAttributes(target) {
+        var src = target.dataset.src || target.dataset.backgroundImage || target.dataset.loadImage || '';
+        var alt = target.dataset.alt || '';
+        return {
+          src: src,
+          alt: alt
+        };
       }
     }]);
 
