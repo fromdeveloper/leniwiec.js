@@ -68,16 +68,28 @@ export default class Leniwiec {
 	 * @param {Element} target
 	 */
 	load(target) {
-		switch (target.tagName) {
-			case 'IMG':
-				this.setSrc(target);
-				break;
-			case 'PICTURE':
-				this.setPicture(target);
-				break;
-			default:
-				this.setBackground(target);
+		if (target.dataset.loadImage) {
+			this.onlyLoad(target);
+		} else {
+			switch (target.tagName) {
+				case 'IMG':
+					this.setSrc(target);
+					break;
+				case 'PICTURE':
+					this.setPicture(target);
+					break;
+				default:
+					this.setBackground(target);
+			}
 		}
+	}
+
+	onlyLoad(target) {
+		const { src } = Leniwiec.getTargetAttributes(target);
+
+		const image = new Image();
+		this.bindImageEvents(image, target, [src]);
+		image.setAttribute('src', src);
 	}
 
 	/**
@@ -132,17 +144,17 @@ export default class Leniwiec {
 	 * @param {Image|Element} eventElement
 	 * @param {Element} target
 	 */
-	bindImageEvents(eventElement, target) {
+	bindImageEvents(eventElement, target, payload = []) {
 		const { loadedClassName, errorClassName } = this.config;
 
 		const load = () => {
 			target.classList.add(loadedClassName);
-			this.config.onLoad(target);
+			this.config.onLoad(target, ...payload);
 		};
 
 		const error = () => {
 			target.classList.add(errorClassName);
-			this.config.onError(target);
+			this.config.onError(target, ...payload);
 		};
 
 		eventElement.addEventListener('load', load);
@@ -184,7 +196,8 @@ export default class Leniwiec {
 	 * @return {Object}
 	 */
 	static getTargetAttributes(target) {
-		const src = target.dataset.src || target.dataset.backgroundImage || '';
+		const src =
+			target.dataset.src || target.dataset.backgroundImage || target.dataset.loadImage || '';
 		const alt = target.dataset.alt || '';
 
 		return { src, alt };

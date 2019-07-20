@@ -59,6 +59,15 @@
 			</picture>
 		</div>
 
+		<div class="text-center">
+			<h2>Progresive Image Loading (data-load exaplde)</h2>
+		</div>
+
+		<div class="img-progressive js-progressive" data-load-image="./images/progressive/1-big.jpg">
+			<div class="img-progressive__small js-small" style="background-image:url(./images/progressive/1-small.jpg)"></div>
+			<div class="img-progressive__big js-big"></div>
+		</div>
+
 		<div class="text-center bottom">
 			<footer>
 				<p>Images from unsplash.com</p>
@@ -70,6 +79,14 @@
 				threshold: 0.5,
 			});
 			leniwiec.mount();
+
+			const progressive = new Leniwiec('.js-progressive', {
+				threshold: 0.5,
+				onLoad: (target, src) => {
+					target.querySelector('.js-big').style.backgroundImage = `url(${src})`;
+				}
+			});
+			progressive.mount();
 
 			const imagesList = document.querySelector('.js-images-list');
 			const button = document.querySelector('.js-load-more');

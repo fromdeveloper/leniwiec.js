@@ -48,3 +48,47 @@ body {
 .bottom {
 	margin: 30px 0 0;
 }
+
+.img-progressive {
+	$this: &;
+	position: relative;
+	padding-top: 65%;
+	overflow: hidden;
+
+	&__small,
+	&__big {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+
+		transition: 0.5 ease;
+	}
+
+	&__small {
+		filter: blur(12px);
+		transform: scale(1.05);
+	}
+
+	&__big {
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	&.is-loaded {
+		#{$this}__small {
+			opacity: 0;
+			visibility: hidden;
+		}
+
+		#{$this}__big {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+}
