@@ -1,10 +1,10 @@
 /**
  * Check if the user is a robot
  *
- * @return {bool}
+ * @return {boolean}
  */
-export default function isRobot() {
-	const isBrowser = typeof window !== 'undefined';
+export default function isRobot(): boolean {
+	const isBrowser: boolean = typeof window !== 'undefined';
 
 	return (
 		(isBrowser && !('onscroll' in window)) ||
