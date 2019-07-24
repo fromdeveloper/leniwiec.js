@@ -1,21 +1,17 @@
 {
 	"ignore": ["node_modules/**"],
-	"env": {
-		"test": {
-			"presets": ["@babel/preset-env"],
-			"plugins": ["@babel/plugin-transform-object-assign"]
-		},
-		"release": {
-			"presets": [
-				[
-					"@babel/preset-env",
-					{
-						"modules": false
-					}
-				]
-			],
-			"sourceMap": false,
-			"plugins": ["@babel/plugin-transform-object-assign"]
-		}
-	}
+	"presets": [
+		"@babel/preset-typescript",
+		[
+			"@babel/preset-env",
+			{
+				"modules": false
+			}
+		]
+	],
+	"plugins": [
+    "@babel/plugin-proposal-numeric-separator",
+    "@babel/proposal-class-properties",
+    "@babel/proposal-object-rest-spread"
+  ]
 }
