@@ -18,10 +18,8 @@ $ yarn add leniwiec
 import Leniwiec from 'leniwiec';
 
 // ...create instance...
-const leniwiec = new Leniwiec();
-
-// ...and mount it
-leniwiec.mount();
+// elements - string selector, NodeList, HTMLElement, Node, HTMLElement[] or Node[]
+new Leniwiec(elements, config);
 ```
 
 ## Options
@@ -29,32 +27,40 @@ leniwiec.mount();
 ```javascript
 {
   // https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
-	root: null,
-	rootMargin: '0px',
-	threshold: 0,
+  root: null,
+  rootMargin: '0px',
+  threshold: 0,
 
   // Class name added for unloaded images
-	errorClassName: 'is-error',
+  errorClassName: 'is-error',
 
   // Class name added for loaded images
-	loadedClassName: 'is-loaded',
+  loadedClassName: 'is-loaded',
 
   // Callback fired after loading the image
-	onLoad: element => { console.log(element) }, // loaded element
+  // The src argument is passed only to elements with the data-load-image attribute
+  onLoad: (element, src) => { 
+    console.log(src); // loaded src path
+    console.log(element); // loaded target element
+  }, 
 
   // Callback fired on error when loading the image
-	onError: element => { console.log(element) }, // unloaded element
+  onError: target => { console.log(target) }, // unloaded target element
 }
 ```
 
 ## Methods
 
 ```javascript
-// Activation of the class
-leniwiec.mount();
-
 // Addition of a new element for observation by the class
+// element - HTMLElement
 leniwiec.observe(element);
+
+// Immediately unobserve all elements
+leniwiec.unmount();
+
+// Load all elements immediately
+leniwiec.loadAll();
 ```
 
 ## Examples
