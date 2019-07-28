@@ -120,7 +120,7 @@ export default class Leniwiec {
 	private loadImg(target: HTMLElement, attributes: TargetAttributes, payload: any[]): void {
 		const { src } = attributes;
 
-		const image = document.createElement('image');
+		const image = new Image();
 		this.bindTargetCallbacks(image, target, payload);
 
 		image.setAttribute('src', src);
@@ -151,7 +151,7 @@ export default class Leniwiec {
 	private setBackgroundImage(target: HTMLElement, attributes: TargetAttributes): void {
 		const { src } = attributes;
 
-		const image = document.createElement('image');
+		const image = new Image();
 		this.bindTargetCallbacks(image, target);
 
 		image.setAttribute('src', src);
@@ -170,7 +170,7 @@ export default class Leniwiec {
 	private setPicture(target: HTMLElement, attributes: TargetAttributes): void {
 		const { src, alt } = attributes;
 
-		const image = document.createElement('image');
+		const image = new Image();
 		this.bindTargetCallbacks(image, target);
 
 		image.setAttribute('src', src);
@@ -195,13 +195,13 @@ export default class Leniwiec {
 	/**
 	 * Binds the "loading" and "error" events to the image
 	 *
-	 * @param {HTMLElement} eventElement
+	 * @param {HTMLImageElement} eventElement
 	 * @param {HTMLElement} target
 	 * @param {any[]} payload
 	 * @return {void}
 	 */
 	private bindTargetCallbacks(
-		eventElement: HTMLElement,
+		eventElement: HTMLImageElement,
 		target: HTMLElement,
 		payload: any[] = [],
 	): void {
