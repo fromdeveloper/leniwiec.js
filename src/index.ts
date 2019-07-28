@@ -13,9 +13,9 @@ interface TargetAttributes {
  * @class
  */
 export default class Leniwiec {
-	public elements: HTMLElement[];
-	public config: DefaultConfig;
-	public observer: IntersectionObserver;
+	private elements: HTMLElement[];
+	private config: DefaultConfig;
+	private observer: IntersectionObserver;
 
 	/**
 	 * Class for lazy loading of images based on the IntersectionObserver API.
