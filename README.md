@@ -69,6 +69,23 @@ leniwiec.observe(element);
 </picture>
 ```
 
+## Progressive Images Loading Example
+
+```html
+<div class="js-progressive" data-load-image="big-image.jpg">
+	<div class="js-small" style="background-image:url(small-image.jpg)"></div>
+	<div class="js-big"></div>
+</div>
+```
+
+```js
+new Leniwiec(document.querySelectorAll('.js-progressive'), {
+	onLoad: (target, src) => {
+		target.querySelector('.js-big').style.backgroundImage = `url(${src})`;
+	}
+});
+```
+
 ## License
 
 [MIT](LICENSE) © [Przemysław Tyczyński](https://tyczynski.pl)

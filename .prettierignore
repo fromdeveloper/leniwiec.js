@@ -1,11 +1,5 @@
-# dependencies
 node_modules/
-
-# dist
-dist/
-
-# docs
+lib/
 docs/
-
-# dev
-gulp-tasks/
+scripts/
+test/
