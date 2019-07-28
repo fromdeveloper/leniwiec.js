@@ -1,3 +1,4 @@
+import callIfFn from 'calliffn';
 import defaultConfig, { DefaultConfig } from './defaultConfig';
 import isRobot from './utils/isRobot';
 
@@ -194,12 +195,12 @@ export default class Leniwiec {
 
 		const load = (): void => {
 			target.classList.add(loadedClassName);
-			this.config.onLoad(target, ...payload);
+			callIfFn(this.config.onLoad, target, ...payload);
 		};
 
 		const error = (): void => {
 			target.classList.add(errorClassName);
-			this.config.onError(target, ...payload);
+			callIfFn(this.config.onError, target, ...payload);
 		};
 
 		eventElement.addEventListener('load', load);
