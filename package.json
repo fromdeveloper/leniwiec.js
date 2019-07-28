@@ -17,8 +17,8 @@
 		"seo-friendly"
 	],
 	"main": "lib/leniwiec.js",
-  "module": "lib/leniwiec.es.js",
-  "jsnext:main": "dist/leniwiec.es.js",
+	"module": "lib/leniwiec.es.js",
+	"jsnext:main": "dist/leniwiec.es.js",
 	"unpkg": "lib/leniwiec.iife.js",
 	"private": false,
 	"files": [
@@ -27,8 +27,8 @@
 	],
 	"scripts": {
 		"build:umd": "rollup --config scripts/umd.js && rollup --config scripts/umd.min.js",
-    "build:iife": "rollup --config scripts/umd.js && rollup --config scripts/iife.min.js",
-    "build:esm": "rollup --config scripts/esm.js && rollup --config scripts/esm.js",
+		"build:iife": "rollup --config scripts/umd.js && rollup --config scripts/iife.min.js",
+		"build:esm": "rollup --config scripts/esm.js && rollup --config scripts/esm.js",
 		"build:lib": "npm run build:umd && npm run build:iife && npm run build:esm",
 		"build:css": "node-sass docs/scss/styles.scss docs/css/styles.min.css --output-style compressed",
 		"watch:css": "node-sass docs/scss/styles.scss docs/css/styles.min.css --output-style compressed --watch",
@@ -72,6 +72,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.5.5",
 		"@types/jest": "^24.0.15",
+		"@types/node": "^12.6.8",
 		"@typescript-eslint/eslint-plugin": "^1.13.0",
 		"@typescript-eslint/parser": "^1.13.0",
 		"copyfiles": "^2.1.1",
@@ -80,6 +81,7 @@
 		"eslint-plugin-import": "^2.17.3",
 		"eslint-plugin-prettier": "^3.1.0",
 		"husky": "^2.4.1",
+		"jest": "^24.8.0",
 		"lint-staged": "^8.2.0",
 		"live-server": "^1.2.1",
 		"node-sass": "^4.12.0",
