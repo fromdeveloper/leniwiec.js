@@ -186,7 +186,8 @@ export default class Leniwiec {
 	 * @return {TargetAttributes}
 	 */
 	private getTargetAttributes(target: HTMLElement): TargetAttributes {
-		const src = target.dataset.src || target.dataset.backgroundImage || target.dataset.loadImage || '';
+		const src =
+			target.dataset.src || target.dataset.backgroundImage || target.dataset.loadImage || '';
 		const { alt = '' } = target.dataset;
 
 		return { src, alt };
