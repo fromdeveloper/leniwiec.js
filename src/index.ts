@@ -23,8 +23,8 @@ export default class Leniwiec {
 	 * @param elements
 	 * @param config
 	 */
-	public constructor(elements: NodeList, config: DefaultConfig = {}) {
-		this.elements = Array.from(elements) as HTMLElement[];
+	public constructor(elements: any, config: DefaultConfig = {}) {
+		this.elements = Leniwiec.getElements(elements) as HTMLElement[];
 
 		this.config = {
 			...defaultConfig,
@@ -235,5 +235,27 @@ export default class Leniwiec {
 	 */
 	public unmount(): void {
 		this.observer.disconnect();
+	}
+
+	/**
+	 * Convert the passed argument to the Node[] or throw Error
+	 *
+	 * @param {*} elements
+	 * @return {Node[]}
+	 */
+	private static getElements(elements: any): Node[] {
+		if (typeof elements === 'string') {
+			return Array.from(document.querySelectorAll(elements));
+		} else if (elements instanceof NodeList) {
+			return Array.from(elements);
+		} else if (elements instanceof HTMLElement) {
+			return [elements];
+		} else if (elements instanceof Array) {
+			return elements;
+		} else {
+			throw new Error(
+				'Passed elements should be a string selector, NodeList, HTMLElement, Node, HTMLElement[] or Node[]',
+			);
+		}
 	}
 }
