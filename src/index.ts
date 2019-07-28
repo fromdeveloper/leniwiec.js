@@ -95,19 +95,35 @@ export default class Leniwiec {
 	 */
 	private load(target: HTMLElement): void {
 		const attributes = this.getTargetAttributes(target);
-		let payload = [];
 
 		if (target.hasAttribute('data-load-image')) {
-			payload = [attributes.src];
-		}
-
-		if (target.hasAttribute('data-load-image') || target.tagName === 'IMG') {
-			this.setImg(target, attributes, payload);
-		} else if (target.tagName === 'PICTURE') {
-			this.setPicture(target, attributes);
+			this.loadImg(target, attributes, [attributes.src]);
 		} else {
-			this.setBackgroundImage(target, attributes);
+			if (target.tagName === 'IMG') {
+				this.setImg(target, attributes);
+			} else if (target.tagName === 'PICTURE') {
+				this.setPicture(target, attributes);
+			} else {
+				this.setBackgroundImage(target, attributes);
+			}
 		}
+	}
+
+	/**
+	 * The method that only load a image
+	 *
+	 * @param {HTMLElement} target - IntersectionObserverEntry target
+	 * @param {TargetAttributes} attributes - target attributes
+	 * @param {any[]} payload - additional payload for target callback
+	 * @return {void}
+	 */
+	private loadImg(target: HTMLElement, attributes: TargetAttributes, payload: any[]): void {
+		const { src } = attributes;
+
+		const image = document.createElement('image');
+		this.bindTargetCallbacks(image, target, payload);
+
+		image.setAttribute('src', src);
 	}
 
 	/**
@@ -115,14 +131,12 @@ export default class Leniwiec {
 	 *
 	 * @param {HTMLElement} target - IntersectionObserverEntry target
 	 * @param {TargetAttributes} attributes - target attributes
-	 * @param {any[]} payload - additional payload for target callback
 	 * @return {void}
 	 */
-	private setImg(target: HTMLElement, attributes: TargetAttributes, payload: any[]): void {
+	private setImg(target: HTMLElement, attributes: TargetAttributes): void {
 		const { src } = attributes;
 
-		const image = document.createElement('image');
-		this.bindTargetCallbacks(image, image, payload);
+		this.bindTargetCallbacks(target as HTMLImageElement, target);
 
 		target.setAttribute('src', src);
 	}
